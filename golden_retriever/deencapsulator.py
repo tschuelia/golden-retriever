@@ -32,6 +32,26 @@ Suppression therefore stops *output*, not bookkeeping. This reader extends the s
 nothing and losing one of them mojibakes or duplicates content that was never
 suppressed at all.
 
+Inside an HTMLTAG destination
+=============================
+
+MS-OXRTFEX 2.1.3.1.4 gives the group as ``"{" HTMLTAG [HTMLTagParameter] DELIMITER
+CONTENT "}"``, and 2.1.3.1.4.2 makes CONTENT "a fragment of the original HTML content".
+Three things follow, each done in one place below:
+
+- The ``HTMLTagParameter`` is part of the control word, so it never reaches the output.
+  The scanner has consumed the DELIMITER space already; a second space belongs to the
+  fragment.
+- The character table is the one in 2.1.3.1.4.2, not the RTF 1.9.1 Special Characters
+  table. The two disagree about ``\\_``, and a control word the CONTENT table omits
+  produces nothing.
+- Text bytes decode in "the default code page, as specified in the RTF header"
+  (MS-OXRTFEX 2.2.3.2) whatever ``\\fN`` is in effect. A tag is markup the producer
+  wrote; the fonts describe how to render the message, not how its tags were spelled.
+
+A nested group inherits the destination like every other frame field, so a producer that
+wraps part of a fragment in a group gets the same three rules inside it.
+
 Skippable data after ``\\uN``
 =============================
 
@@ -77,7 +97,7 @@ import logging
 from collections.abc import Iterable, Iterator, Mapping
 from types import MappingProxyType
 
-from golden_retriever.charmap import BODY_CHARMAP
+from golden_retriever.charmap import BODY_CHARMAP, HTMLTAG_CHARMAP, CharMap
 from golden_retriever.codepages import encoding_for_codepage
 from golden_retriever.detect import (
     DEFAULT_HEADER_TOKEN_LIMIT,
@@ -145,6 +165,7 @@ _STRICT_ERRORS: Mapping[str, type[GoldenRetrieverError]] = MappingProxyType(
         # Structural damage: something is wrong with the document rather than with
         # the content it carries. Under strict these stop the read.
         DiagnosticCode.MISSING_RTF_MAGIC: MalformedRtfError,
+        DiagnosticCode.UNPREFIXED_HTMLTAG: MalformedRtfError,
         DiagnosticCode.UNBALANCED_GROUPS: MalformedRtfError,
         DiagnosticCode.TRUNCATED_BIN: MalformedRtfError,
         DiagnosticCode.MISSING_FONT_TABLE: MissingFontTableError,
@@ -203,6 +224,7 @@ class _Reader:
         "_diagnostics",
         "_pending_skip",
         "_saw_font_table",
+        "_saw_unprefixed_htmltag",
         "_skip_from_depth",
         "_stack",
         "_tokens",
@@ -221,6 +243,7 @@ class _Reader:
         self._pending_skip = 0
         self._default_font: int | None = None
         self._saw_font_table = False
+        self._saw_unprefixed_htmltag = False
 
         self.emitter = Emitter()
         """What the document produced, still undecoded."""
@@ -290,7 +313,7 @@ class _Reader:
                         continue
                 if self._count_skipped() or frame.htmlrtf:
                     continue
-                text = BODY_CHARMAP.symbols.get(token.name)
+                text = _charmap(frame).symbols.get(token.name)
                 if text is not None:
                     self.emitter.add_text(text)
                 continue
@@ -321,8 +344,9 @@ class _Reader:
     def _enter_destination(self, frame: Frame, token: Token) -> bool:
         """Classify a group's first control word.
 
-        :returns: Whether the token has been dealt with, i.e. whether the destination it
-            named is one whose content this reader does not read.
+        :returns: Whether the token has been dealt with, which it has unless it named no
+            destination at all -- every destination control word is framing rather than
+            content, so none of them produces a character.
         """
         frame.expecting_destination = False
         dest = classify_destination(token.name, ignorable=frame.ignorable)
@@ -335,7 +359,33 @@ class _Reader:
         if dest is Destination.FONTTBL:
             self._read_font_table()
             return True
-        return False
+        # HTMLTAG, whose CONTENT the rest of the group delivers. The HTMLTagParameter of
+        # MS-OXRTFEX 2.1.3.1.4 is this token's parameter and is not part of that
+        # content, so it is dropped here rather than read.
+        if not frame.ignorable:
+            self._report_unprefixed_htmltag()
+        return True
+
+    def _report_unprefixed_htmltag(self) -> None:
+        """Report an HTMLTAG destination group written without its ``\\*``.
+
+        MS-OXRTFEX 2.1.3.1.4 spells the destination ``\\*\\htmltag``, and note A<14>
+        records implementations that de-encapsulate the HTML anyway when a producer
+        leaves the ``\\*`` out. So the group is read as a tag either way, and only the
+        deviation from the grammar is reported: treating the fragment as body content
+        would emit RTF markup into the output.
+
+        Once per document: a producer that omits the ``\\*`` omits it on every tag, and
+        one diagnostic per tag would bury everything else in the list.
+        """
+        if self._saw_unprefixed_htmltag:
+            return
+        self._saw_unprefixed_htmltag = True
+        self._diagnostics.add(
+            DiagnosticCode.UNPREFIXED_HTMLTAG,
+            "an HTMLTAG destination group opened with \\htmltag rather than "
+            "\\*\\htmltag; its content was de-encapsulated as a tag anyway",
+        )
 
     def _leave_destination(self, frame: Frame) -> bool:
         """Note that this group's first token was not a destination control word.
@@ -425,16 +475,22 @@ class _Reader:
         if skipped or frame.htmlrtf:
             return
 
-        text = BODY_CHARMAP.words.get(name)
+        text = _charmap(frame).words.get(name)
         if text is not None:
             self.emitter.add_text(text)
 
     def _font(self, frame: Frame) -> int | None:
         """Which font's code page the bytes of this run belong to.
 
-        ``None`` means the document's own code page, which is where text that no
-        ``\\fN`` and no ``\\deffN`` has claimed is decoded.
+        ``None`` means the document's own code page. That is where text no ``\\fN`` and
+        no ``\\deffN`` has claimed is decoded, and also where the CONTENT of an HTMLTAG
+        destination group is decoded whatever font is in effect: a tag is markup the
+        producer wrote in "the default code page, as specified in the RTF header"
+        (MS-OXRTFEX 2.2.3.2), and the fonts describe how to render the message rather
+        than how its tags were spelled.
         """
+        if frame.dest is Destination.HTMLTAG:
+            return None
         return frame.font_id if frame.font_id is not None else self._default_font
 
     def _finish(self) -> None:
@@ -542,6 +598,16 @@ def deencapsulate(
         fonts=fonts,
         diagnostics=diagnostics.collected(),
     )
+
+
+def _charmap(frame: Frame) -> CharMap:
+    """Which character table a control word or symbol is read against here.
+
+    MS-OXRTFEX 2.1.3.1.4.2 enumerates what a CONTENT fragment may contain, and that is
+    not the RTF 1.9.1 Special Characters table: the two disagree about ``\\_``, and a
+    control word the CONTENT table omits stands for nothing inside a tag.
+    """
+    return HTMLTAG_CHARMAP if frame.dest is Destination.HTMLTAG else BODY_CHARMAP
 
 
 def _font_encodings(fonts: Mapping[int, FontInfo]) -> Mapping[int, str]:

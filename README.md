@@ -79,6 +79,11 @@ out — only whether a problem is raised or reported.
 - **Leniency.** Per MS-OXRTFEX Appendix A `<13>`/`<14>`, missing `{\rtf1` and a
   `\*`-less `\htmltag` are tolerated rather than rejected, with a diagnostic.
   `strict=True` rejects them.
+- **HTMLTAG content uses the document code page.** The bytes of a tag decode
+  with `\ansicpg` whatever `\fN` is in effect. MS-OXRTFEX §2.2.3.2 calls that
+  "the default code page, as specified in the RTF header", and §2.1.3.1.4.2's
+  CONTENT is a fragment of the original HTML rather than message text that a font
+  describes how to render.
 - **HTMLRTF inside HTMLTAG.** Entering an HTMLTAG destination clears HTMLRTF
   suppression for the duration of that group. A strict reading of §2.1.3.1.3
   would carry suppression in, but HTMLRTF exists to hide RTF-only markup and

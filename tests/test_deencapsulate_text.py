@@ -379,11 +379,12 @@ def test_a_group_starting_with_content_declares_no_destination() -> None:
 
 
 def test_a_tag_destination_in_a_plain_text_document_is_content() -> None:
-    """MS-OXRTFEX 2.2.3.3 describes no HTMLTAG handling, and 2.1.3.1.4's CONTENT is a
-    text fragment either way, so the tag arrives as the text it is.
+    """MS-OXRTFEX 2.2.3.3 describes no HTMLTAG handling, so there is nothing to switch
+    on: a ``\\fromtext`` document that carries one gets the same reader the HTML path
+    does, and 2.1.3.1.4.2's CONTENT is a text fragment either way.
 
-    Its ``HTMLTagParameter``, ``84`` here, is part of the control word and never
-    reaches the output.
+    Its ``HTMLTagParameter``, ``84`` here, is part of the control word and never reaches
+    the output.
     """
     assert text(b"a{\\*\\htmltag84 <br>}b") == "a<br>b"
 

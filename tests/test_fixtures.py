@@ -17,28 +17,50 @@ from golden_retriever.result import ContentType
 TEXT_PAIRS = ["fromtext_plain"]
 """Fixtures whose ``.rtf`` de-encapsulates to the matching ``.txt``."""
 
+HTML_PAIRS = [
+    "minimal_html",
+    "multi_codepage_fonts",
+    "nested_htmlrtf",
+    "nonvisible_destinations",
+]
+"""Fixtures whose ``.rtf`` de-encapsulates to the matching ``.html``."""
 
-@pytest.mark.parametrize("name", TEXT_PAIRS)
-def test_a_plain_text_document_matches_its_golden_output(name: str) -> None:
-    """Compared as bytes, and encoded rather than decoded: MS-OXRTFEX 2.2.3.3 maps
+PAIRS = [(name, "txt", ContentType.TEXT) for name in TEXT_PAIRS] + [
+    (name, "html", ContentType.HTML) for name in HTML_PAIRS
+]
+"""Every pair, as ``(name, output suffix, expected content type)``."""
+
+golden = pytest.mark.parametrize(
+    ("name", "suffix", "content_type"), PAIRS, ids=[name for name, _, _ in PAIRS]
+)
+
+
+@golden
+def test_a_golden_document_matches_its_golden_output(
+    name: str, suffix: str, content_type: ContentType
+) -> None:
+    """Compared as bytes, and encoded rather than decoded: MS-OXRTFEX 2.2.3.2 maps
     ``\\par`` to CRLF, and reading the golden as text would translate those away on some
     platforms and hide a line-ending regression on the others."""
     result = deencapsulate(read_bytes(f"{name}.rtf"))
-    assert result.content_type is ContentType.TEXT
-    assert result.text is not None
-    assert result.text.encode("utf-8") == read_bytes(f"{name}.txt")
+    assert result.content_type is content_type
+    assert result.body.encode("utf-8") == read_bytes(f"{name}.{suffix}")
 
 
-@pytest.mark.parametrize("name", TEXT_PAIRS)
-def test_a_golden_document_is_clean_input(name: str) -> None:
+@golden
+def test_a_golden_document_is_clean_input(
+    name: str, suffix: str, content_type: ContentType
+) -> None:
     """Every golden is a document a producer could have written, so nothing about it is
     worth reporting -- which is what makes ``diagnostics`` meaningful elsewhere."""
     result = deencapsulate(read_bytes(f"{name}.rtf"))
     assert result.diagnostics == ()
 
 
-@pytest.mark.parametrize("name", TEXT_PAIRS)
-def test_strict_mode_changes_no_output(name: str) -> None:
+@golden
+def test_strict_mode_changes_no_output(
+    name: str, suffix: str, content_type: ContentType
+) -> None:
     """``strict`` decides whether a problem is raised or recorded; it never decides
     which characters come out."""
     lenient = deencapsulate(read_bytes(f"{name}.rtf"))
@@ -46,11 +68,18 @@ def test_strict_mode_changes_no_output(name: str) -> None:
     assert strict == lenient
 
 
-@pytest.mark.parametrize("name", TEXT_PAIRS)
-def test_a_golden_document_still_has_its_line_endings(name: str) -> None:
+@golden
+def test_a_golden_document_still_has_its_line_endings(
+    name: str, suffix: str, content_type: ContentType
+) -> None:
     """A ``.gitattributes`` regression would rewrite these files on checkout, and every
     other assertion here would then fail for a reason that has nothing to do with the
-    code."""
+    code.
+
+    Every line feed in the expected output belongs to a CRLF, so a conversion in either
+    direction is caught.
+    """
+    output = read_bytes(f"{name}.{suffix}")
     assert b"\r\n" in read_bytes(f"{name}.rtf")
-    assert b"\r\n" in read_bytes(f"{name}.txt")
-    assert b"\n\n" not in read_bytes(f"{name}.txt")
+    assert b"\r\n" in output
+    assert output.count(b"\n") == output.count(b"\r\n")

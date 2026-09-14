@@ -45,6 +45,9 @@ class DiagnosticCode(StrEnum):
     MISSING_RTF_MAGIC = "missing-rtf-magic"
     """The document does not start with ``{\\rtf1`` (MS-OXRTFEX A<13>)."""
 
+    UNPREFIXED_HTMLTAG = "unprefixed-htmltag"
+    """An HTMLTAG destination group omitted its ``\\*`` (MS-OXRTFEX A<14>)."""
+
     UNBALANCED_GROUPS = "unbalanced-groups"
     """Groups were still open at end of input, or a stray ``}`` was found."""
 
