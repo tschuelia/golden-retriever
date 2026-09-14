@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+build/
+dist/
+
+# Pixi
+.pixi/
+
+# Environments and secrets
+.env
+.venv/
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+*.swp
