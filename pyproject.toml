@@ -39,6 +39,10 @@ packages = ["golden_retriever"]
 [tool.pytest.ini_options]
 addopts = "--import-mode=importlib -m 'not slow'"
 testpaths = ["tests"]
+# importlib import mode deliberately keeps test directories off sys.path, which also
+# makes the shared helpers in tests/conftest.py unimportable. Putting it back is what
+# lets every test module say `from conftest import read_bytes`.
+pythonpath = ["tests"]
 markers = ["slow: performance checks, deselected by default"]
 
 [tool.coverage.run]

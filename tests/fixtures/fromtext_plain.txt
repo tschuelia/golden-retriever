@@ -1,0 +1,6 @@
+Plain text, de-encapsulated.
+Escaped delimiters: { } \
+An ellipsis … and a bullet •
+	Indented, after a horizontal tab.
+Shift-JIS via あい and back.
+— and ☃

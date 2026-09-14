@@ -85,6 +85,20 @@ out — only whether a problem is raised or reported.
   HTMLTAG content _is_ the HTML output. Real producers never nest the two, so the
   behaviors are indistinguishable on real input; this choice fails toward
   keeping content rather than silently dropping it.
+- **State is tracked while suppressed.** §2.2.3.2 requires the current font to be
+  tracked even where `\fN` sits inside a fragment an HTMLRTF control word
+  disabled. The same treatment is given to the other control words that copy
+  nothing and only carry state — `\ucN`, `\ansicpgN`, `\deffN`, and a group's
+  destination, including `{\fonttbl…}`. Suppression stops output, not
+  bookkeeping: losing one of these mojibakes or duplicates content that was
+  never suppressed at all.
+- **`\uN` is never skippable data.** RTF 1.9.1 counts "any RTF control word or
+  symbol" as one character of the ANSI representation to be skipped after a
+  `\uN`. A following `\uN` is exempt here, because skippable data is by
+  definition an _ANSI_ representation and a `\uN` is not one — it is a character
+  with no other spelling in the document. It is also what makes a surrogate pair
+  written as `\u-10179\u-8704`, with no ANSI representation between the halves,
+  come out as one character.
 
 ## Security
 
