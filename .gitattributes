@@ -1,7 +1,22 @@
 * text=auto
 
-*.{diff,patch} binary
-*.{py,yaml,yml,sh} text eol=lf
+# Git does not expand brace patterns in .gitattributes, so each extension needs
+# its own line.
+*.diff binary
+*.patch binary
+
+*.py text eol=lf
+*.pyi text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+*.sh text eol=lf
 *.bat text eol=crlf
+
+# Test fixtures are compared byte for byte. De-encapsulated output legitimately
+# contains CRLF (MS-OXRTFEX maps \par to CRLF), so Git must not rewrite line
+# endings on either the RTF input or the expected output. "-text" disables all
+# conversion while keeping the files diffable.
+*.rtf -text
+tests/fixtures/** -text
 
 pixi.lock merge=binary linguist-language=YAML linguist-generated=true
