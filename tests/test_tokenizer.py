@@ -74,14 +74,14 @@ def test_the_delimiter_space_is_consumed() -> None:
 
 
 def test_only_one_delimiter_space_is_consumed() -> None:
-    """RTF 1.9.1: "any characters following the single space delimiter, including
-    any subsequent spaces, will appear as text"."""
+    """RTF 1.9.1: "any characters following the single space delimiter, including any
+    subsequent spaces, will appear as text"."""
     assert scan(b"\\par  x") == [word("par"), text(b" x")]
 
 
 def test_a_delimiter_that_is_not_a_space_stays_in_the_stream() -> None:
-    """RTF 1.9.1: such a character "terminates the control word and is not part of
-    the control word"."""
+    """RTF 1.9.1: such a character "terminates the control word and is not part of the
+    control word"."""
     assert scan(b"\\pard{\\b x}") == [
         word("pard"),
         GROUP_START,
@@ -103,8 +103,8 @@ def test_a_negative_parameter_keeps_its_sign() -> None:
 def test_an_absent_parameter_is_not_a_zero_parameter(
     raw: bytes, param: int | None
 ) -> None:
-    """MS-OXRTFEX 2.2.3.1 recognizes ``\\fromhtml1`` and nothing else, so these
-    three have to stay distinguishable."""
+    """MS-OXRTFEX 2.2.3.1 recognizes ``\\fromhtml1`` and nothing else, so these three
+    have to stay distinguishable."""
     assert scan(raw) == [word("fromhtml", param)]
 
 
@@ -120,8 +120,8 @@ def test_control_symbols(char: str) -> None:
 
 
 def test_a_control_symbol_does_not_consume_a_following_space() -> None:
-    """RTF 1.9.1: "control symbols do not have delimiters, i.e., a space following
-    a control symbol is treated as text, not a delimiter"."""
+    """RTF 1.9.1: "control symbols do not have delimiters, i.e., a space following a
+    control symbol is treated as text, not a delimiter"."""
     assert scan(b"\\~ x") == [symbol("~"), text(b" x")]
 
 
@@ -151,8 +151,8 @@ def test_a_hex_escape_carries_both_its_byte_and_its_value(value: int) -> None:
 def test_consecutive_hex_escapes_stay_separate_and_in_order() -> None:
     """A double-byte character arrives as two escapes and has to decode as a pair.
 
-    RTF 1.9.1 (East Asian RTF) allows a lead byte and its trailing byte to be
-    escaped independently, so nothing may reorder or merge them here.
+    RTF 1.9.1 (East Asian RTF) allows a lead byte and its trailing byte to be escaped
+    independently, so nothing may reorder or merge them here.
     """
     assert scan(b"\\'82\\'a0") == [octet(0x82), octet(0xA0)]
 
@@ -168,8 +168,8 @@ def test_consecutive_hex_escapes_stay_separate_and_in_order() -> None:
 def test_an_incomplete_hex_escape_becomes_an_ignored_control_symbol(
     raw: bytes, expected: list[Token]
 ) -> None:
-    """``\\'`` without two digits produces no character, rather than an apostrophe
-    the producer never wrote."""
+    """``\\'`` without two digits produces no character, rather than an apostrophe the
+    producer never wrote."""
     assert scan(raw) == expected
 
 
@@ -193,8 +193,8 @@ def test_a_backslash_before_a_line_break_is_a_paragraph_mark(raw: bytes) -> None
 def test_a_binary_payload_is_taken_verbatim() -> None:
     """RTF 1.9.1: N "is the number of bytes that follow", and they may be anything.
 
-    Braces and backslashes inside the payload are data, which is the reason this is
-    a scanner and not a grammar.
+    Braces and backslashes inside the payload are data, which is the reason this is a
+    scanner and not a grammar.
     """
     assert scan(b"\\bin5 {}\\ab") == [Token(TokenKind.BINARY, b"{}\\ab", param=5)]
 
@@ -277,8 +277,8 @@ def test_names_are_reported_the_way_the_character_tables_are_keyed() -> None:
 def rejoin(token: Token) -> bytes:
     """The RTF a token was scanned from, in canonical form.
 
-    Canonical means every control word is followed by its delimiting space, since
-    that space is consumed and cannot be recovered from the token itself.
+    Canonical means every control word is followed by its delimiting space, since that
+    space is consumed and cannot be recovered from the token itself.
     """
     if token.kind is TokenKind.TEXT:
         return token.data

@@ -95,8 +95,8 @@ MAX_PARAMETER_DIGITS = 10
 class TokenKind(StrEnum):
     """What a :class:`Token` stands for.
 
-    The values are strings so that a failed assertion on a token sequence reads as
-    the RTF it came from.
+    The values are strings so that a failed assertion on a token sequence reads as the
+    RTF it came from.
     """
 
     TEXT = "text"
@@ -142,10 +142,9 @@ class Token(NamedTuple):
     name: str = ""
     """A ``WORD`` name without its backslash, or the one character of a ``SYMBOL``.
 
-    Control word names are ASCII by definition. A symbol character is reported as
-    its Latin-1 character, which is exact for every control symbol the
-    specification defines and, for anything else, only has to not match a table
-    entry.
+    Control word names are ASCII by definition. A symbol character is reported as its
+    Latin-1 character, which is exact for every control symbol the specification defines
+    and, for anything else, only has to not match a table entry.
     """
 
     param: int | None = None
