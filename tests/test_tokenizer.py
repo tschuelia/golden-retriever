@@ -308,7 +308,7 @@ def test_every_byte_of_a_document_is_accounted_for() -> None:
     document = (
         b"{\\rtf1 \\ansi \\ansicpg1252 \\fromhtml1 "
         b"{\\fonttbl {\\f0 \\fcharset0 Calibri;}}"
-        b"{\\*\\htmltag84 <p>}caf\\'e9 \\{x\\}\\emdash \\bin4 \x00\x01{}"
+        b"{\\*\\htmltag84 <p>}r\\'e9sum\\'e9 \\{x\\}\\emdash \\bin4 \x00\x01{}"
         b"\\par }"
     )
     assert b"".join(rejoin(token) for token in tokenize(document)) == document
