@@ -52,6 +52,10 @@ source = ["golden_retriever"]
 [tool.coverage.report]
 show_missing = true
 skip_covered = true
+# A floor rather than the number currently reached, which is 100%. The gap is there so
+# that adding a hard-to-reach branch is a decision to argue for in review instead of a
+# build failure to route around.
+fail_under = 95
 
 [tool.docformatter]
 black = true # only sets the style options to the default values of black

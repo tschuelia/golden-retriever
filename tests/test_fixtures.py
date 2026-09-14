@@ -4,26 +4,16 @@ The inline tests each pin one rule. These pin whole documents of the shape a pro
 writes -- header, font table, header tables, then a body -- so that a change which is
 correct in isolation but wrong in combination still fails.
 
-The pairs are listed explicitly rather than discovered from the directory: a fixture that
-went missing would make an auto-discovering suite quietly smaller instead of red.
+The pairs are listed in ``conftest.py`` rather than discovered from the directory: a
+fixture that went missing would make an auto-discovering suite quietly smaller instead of
+red. The mutation fuzz reads the same list.
 """
 
 import pytest
-from conftest import read_bytes
+from conftest import HTML_PAIRS, TEXT_PAIRS, read_bytes
 
 from golden_retriever import deencapsulate
 from golden_retriever.result import ContentType
-
-TEXT_PAIRS = ["fromtext_plain"]
-"""Fixtures whose ``.rtf`` de-encapsulates to the matching ``.txt``."""
-
-HTML_PAIRS = [
-    "minimal_html",
-    "multi_codepage_fonts",
-    "nested_htmlrtf",
-    "nonvisible_destinations",
-]
-"""Fixtures whose ``.rtf`` de-encapsulates to the matching ``.html``."""
 
 PAIRS = [(name, "txt", ContentType.TEXT) for name in TEXT_PAIRS] + [
     (name, "html", ContentType.HTML) for name in HTML_PAIRS
