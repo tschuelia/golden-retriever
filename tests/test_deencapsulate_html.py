@@ -73,6 +73,20 @@ def test_a_clean_document_produces_html_and_nothing_else() -> None:
     assert result.document_encoding == "cp1252"
     assert set(result.fonts) == {0, 1}
     assert result.body == result.html
+    assert result.declared_html_charset is None
+
+
+def test_the_charset_the_extracted_markup_declares_is_reported() -> None:
+    """The declaration is part of the extracted HTML like any other tag, and reporting
+    it is what lets a caller fix it before writing the result out as something else.
+
+    It describes the bytes the producer encapsulated, so it is reported rather than acted
+    on: those bytes are already decoded by the time a caller sees this.
+    """
+    meta = b'<meta http-equiv="Content-Type" content="text/html; charset=us-ascii">'
+    result = run(tag(b"<html><head>") + tag(meta) + tag(b"</head>"))
+    assert result.declared_html_charset == "us-ascii"
+    assert result.document_encoding == "cp1252"
 
 
 # --- The HTMLTAG destination group (MS-OXRTFEX 2.1.3.1.4) ---

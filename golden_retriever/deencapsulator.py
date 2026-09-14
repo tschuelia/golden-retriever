@@ -121,6 +121,7 @@ from golden_retriever.groups import (
     GroupStack,
     classify_destination,
 )
+from golden_retriever.html_meta import declared_charset
 from golden_retriever.result import (
     ContentType,
     DeEncapsulationResult,
@@ -594,7 +595,10 @@ def deencapsulate(
         text=None if is_html else emitted.text,
         document_codepage=reader.codepage,
         document_encoding=document_encoding,
-        declared_html_charset=None,
+        # Reported rather than acted on: the charset a producer declared describes the
+        # bytes it encapsulated, and those are already decoded by the time this runs.
+        # Plain text declares nothing, so there is nothing to look for there.
+        declared_html_charset=declared_charset(emitted.text) if is_html else None,
         fonts=fonts,
         diagnostics=diagnostics.collected(),
     )

@@ -68,6 +68,13 @@ def test_strict_mode_changes_no_output(
     assert strict == lenient
 
 
+def test_the_charset_a_golden_document_declares_is_reported() -> None:
+    """``minimal_html`` carries the ``http-equiv`` declaration a producer writes, inside
+    an HTMLTAG group like the rest of its markup."""
+    result = deencapsulate(read_bytes("minimal_html.rtf"))
+    assert result.declared_html_charset == "us-ascii"
+
+
 @golden
 def test_a_golden_document_still_has_its_line_endings(
     name: str, suffix: str, content_type: ContentType

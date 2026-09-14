@@ -135,26 +135,31 @@ Treat both the input and the output as untrusted.
 golden-retriever is MIT licensed and has no runtime dependencies, so a downstream
 license audit only ever sees `MIT`.
 
-The implemented behavior is derived from three published Microsoft
-specifications:
+The RTF handling is derived from three published Microsoft specifications:
 
 - [MS-OXRTFEX](https://learn.microsoft.com/en-us/openspecs/exchange_server_protocols/ms-oxrtfex/906fbb0f-2467-490e-8c3e-bdc31c5e9d35)
 - [Rich Text Format (RTF) Specification, version 1.9.1](https://go.microsoft.com/fwlink/?LinkId=120924)
 - [Code Page Identifiers](https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers)
 
+The one part that is not RTF is the charset declaration that `declared_charset` and
+`normalize_charset_declaration` read and rewrite. Those search only the document
+head, recognize `<meta charset=…>` and the `http-equiv` form, and validate the name
+they write against `codecs` — a targeted attribute rewrite, not an HTML parser.
+
 ## Implementation status
 
 Tracked against the module layout, not the spec:
 
-- [ ] `exceptions.py`, `result.py` — public types
-- [ ] `codepages.py` — `\fcharset` and `\ansicpg` resolution
-- [ ] `charmap.py` — control word and control symbol tables
-- [ ] `tokenizer.py` — byte-level RTF lexer
-- [ ] `detect.py` — §2.2.3.1 recognition
-- [ ] `emitter.py` — deferred decoding
-- [ ] `groups.py` — group state and destination classification
-- [ ] `deencapsulator.py` — §2.2.3.2 and §2.2.3.3 drivers
-- [ ] `html_meta.py` — charset declaration helpers
+- [x] `exceptions.py`, `result.py` — public types
+- [x] `codepages.py` — `\fcharset` and `\ansicpg` resolution
+- [x] `charmap.py` — control word and control symbol tables
+- [x] `tokenizer.py` — byte-level RTF lexer
+- [x] `detect.py` — §2.2.3.1 recognition
+- [x] `emitter.py` — deferred decoding
+- [x] `groups.py` — group state and destination classification
+- [x] `fonts.py` — `\fonttbl` parsing and code page resolution
+- [x] `deencapsulator.py` — §2.2.3.2 and §2.2.3.3 drivers
+- [x] `html_meta.py` — charset declaration helpers
 
 ## Development
 
