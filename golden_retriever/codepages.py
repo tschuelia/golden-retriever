@@ -7,8 +7,8 @@ The tables here were transcribed from two published Microsoft documents.
 
 - ``FCHARSET_TO_CODEPAGE`` follows the ``\\fcharsetN`` table in the `Rich Text
   Format (RTF) Specification, version 1.9.1
-  <https://learn.microsoft.com/en-us/previous-versions/office/developer/office-2007/dd351035(v=office.12)>`_,
-  which enumerates the Windows ``*_CHARSET`` constants a font entry may declare.
+  <https://go.microsoft.com/fwlink/?LinkId=120924>`_, which enumerates the
+  Windows ``*_CHARSET`` constants a font entry may declare.
 - ``CODEPAGE_TO_CODEC`` follows `Code Page Identifiers
   <https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers>`_.
 

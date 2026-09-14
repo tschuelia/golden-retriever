@@ -7,7 +7,7 @@ Exchange and Outlook write into an email's `PidTagRtfCompressed` stream.
 
 The extraction follows
 [MS-OXRTFEX](https://learn.microsoft.com/en-us/openspecs/exchange_server_protocols/ms-oxrtfex/906fbb0f-2467-490e-8c3e-bdc31c5e9d35)
-and the [RTF Specification 1.9.1](<https://learn.microsoft.com/en-us/previous-versions/office/developer/office-2007/dd351035(v=office.12)>).
+and the [RTF Specification 1.9.1](https://go.microsoft.com/fwlink/?LinkId=120924).
 
 > **Status: in development.** The API below is the target surface and is not yet
 > complete. See [Implementation status](#implementation-status).
@@ -120,7 +120,7 @@ The implemented behavior is derived from three published Microsoft
 specifications:
 
 - [MS-OXRTFEX](https://learn.microsoft.com/en-us/openspecs/exchange_server_protocols/ms-oxrtfex/906fbb0f-2467-490e-8c3e-bdc31c5e9d35)
-- [Rich Text Format (RTF) Specification, version 1.9.1](<https://learn.microsoft.com/en-us/previous-versions/office/developer/office-2007/dd351035(v=office.12)>)
+- [Rich Text Format (RTF) Specification, version 1.9.1](https://go.microsoft.com/fwlink/?LinkId=120924)
 - [Code Page Identifiers](https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers)
 
 ## Implementation status

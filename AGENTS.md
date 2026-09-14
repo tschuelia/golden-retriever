@@ -4,7 +4,7 @@ All RTF handling in this package must be derived from:
 
 - [MS-OXRTFEX](https://learn.microsoft.com/en-us/openspecs/exchange_server_protocols/ms-oxrtfex/906fbb0f-2467-490e-8c3e-bdc31c5e9d35)
   — RTF Compressed and RTF-Encapsulated HTML
-- [Rich Text Format (RTF) Specification, version 1.9.1](<https://learn.microsoft.com/en-us/previous-versions/office/developer/office-2007/dd351035(v=office.12)>)
+- [Rich Text Format (RTF) Specification, version 1.9.1](https://go.microsoft.com/fwlink/?LinkId=120924)
 - [Code Page Identifiers](https://learn.microsoft.com/en-us/windows/win32/intl/code-page-identifiers)
 
 When you add a spec-derived table or rule, cite the section in a comment. That
