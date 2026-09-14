@@ -72,6 +72,7 @@ class DiagnosticCode(StrEnum):
     SKIPPED_DESTINATION = "skipped-destination"
     """A non-visible destination group was skipped."""
 
+
 @dataclass(frozen=True, slots=True)
 class FontInfo:
     """One entry of the document's ``\\fonttbl``.

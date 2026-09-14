@@ -23,9 +23,18 @@ test-coverage = "pytest --cov=golden_retriever --cov-report=term-missing"
 
 [feature.lint.dependencies]
 lefthook = "*"
-docformatter = "*"
+# 1.7.8 deletes one of the two blank lines between an attribute docstring that
+# ends a class body and a following decorated statement, which ruff format then
+# puts back -- the two tools rewrite the same line forever and the hook fails on
+# a coin flip. 1.7.7 leaves it alone. Reproduce with a three-line file:
+#   class A:\n    x = 1\n    """Doc."""\n\n\n@dec\nclass B:\n    """Doc."""
+docformatter = "!=1.7.8"
 ruff = "*"
 mypy = "*"
+# mypy type-checks the test suite too, so it needs pytest importable to resolve
+# the decorators it uses. Not a package dependency: the lint environment is
+# built with no-default-feature.
+pytest = "*"
 prettier = "*"
 taplo = "*"
 pre-commit-hooks = "*"
