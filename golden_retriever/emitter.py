@@ -48,8 +48,8 @@ place. This class has no delete operation, and a segment records nothing about
 where in the document it came from, so deleting content by source position is not
 a mistake that can be made here.
 
-Failure
-=======
+Failure modes
+=============
 
 Nothing in this module raises, whatever the content, and nothing it records
 escalates under ``strict``: an unknown font, bytes their code page does not
