@@ -14,7 +14,7 @@ permissions:
 
 jobs:
   lint:
-    name: Ruff
+    name: Lint
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -27,19 +27,23 @@ jobs:
         with:
           environments: lint
           frozen: true
-      - name: Run Ruff
-        run: |
-          pixi run --frozen -e lint lint
-          pixi run --frozen -e lint format-check
+      - name: Run linters
+        run: pixi run --frozen -e lint lint
 
   tests:
-    name: pytest (${{ matrix.environment }})
-    runs-on: ubuntu-latest
+    name: pytest (${{ matrix.environment }}, ${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
+        os: [ubuntu-latest]
         environment: [py312, py313, py314]
+        include:
+          # De-encapsulated output contains CRLF by design, so line-ending
+          # handling needs at least one Windows runner to be observable.
+          - os: windows-latest
+            environment: py313
     steps:
       - name: Check out repository
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1

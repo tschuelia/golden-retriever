@@ -4,28 +4,50 @@ build-backend = "hatchling.build"
 
 [project]
 name = "golden-retriever"
+# Replaced from a vMAJOR.MINOR.PATCH tag by the package workflow and by
+# downstream package recipes that build a GitHub source archive.
 version = "0.0.0"
-description = "A Python package."
+description = "Extract HTML embedded in RTF (MS-OXRTFEX de-encapsulation)."
 readme = "README.md"
 requires-python = ">=3.12"
 license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Julia Haag" }]
+keywords = [
+  "rtf",
+  "html",
+  "email",
+  "msg",
+  "outlook",
+  "ms-oxrtfex",
+  "deencapsulation",
+]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
+  "Topic :: Communications :: Email",
+  "Topic :: Text Processing :: Markup :: HTML",
+  "Typing :: Typed",
 ]
 
 [project.urls]
+Documentation = "https://tschuelia.github.io/golden-retriever/"
+Issues = "https://github.com/tschuelia/golden-retriever/issues"
 Repository = "https://github.com/tschuelia/golden-retriever"
 
 [tool.hatch.build.targets.wheel]
 packages = ["golden_retriever"]
 
 [tool.pytest.ini_options]
-addopts = "--import-mode=importlib"
+addopts = "--import-mode=importlib -m 'not slow'"
 testpaths = ["tests"]
+# importlib import mode deliberately keeps test directories off sys.path, which also
+# makes the shared helpers in tests/conftest.py unimportable. Putting it back is what
+# lets every test module say `from conftest import read_bytes`.
+pythonpath = ["tests"]
+markers = ["slow: performance checks, deselected by default"]
 
 [tool.coverage.run]
 branch = true
@@ -34,14 +56,86 @@ source = ["golden_retriever"]
 [tool.coverage.report]
 show_missing = true
 skip_covered = true
+# A floor rather than the number currently reached, which is 100%. The gap is there so
+# that adding a hard-to-reach branch is a decision to argue for in review instead of a
+# build failure to route around.
+fail_under = 95
+
+[tool.docformatter]
+black = true # only sets the style options to the default values of black
 
 [tool.ruff]
 line-length = 88
 target-version = "py312"
 
 [tool.ruff.lint]
-select = ["E", "F", "I", "N", "UP", "W"]
+ignore = [
+  "N803", # https://docs.astral.sh/ruff/rules/invalid-argument-name
+  "N806", # https://docs.astral.sh/ruff/rules/non-lowercase-variable-in-function
+  "E501", # https://docs.astral.sh/ruff/faq/#is-the-ruff-linter-compatible-with-black
+]
+select = [
+  # pyflakes
+  "F",
+  # pycodestyle
+  "E",
+  "W",
+  # isort
+  "I",
+  # pep8-naming
+  "N",
+  # pyupgrade
+  "UP",
+]
 
 [tool.ruff.format]
 indent-style = "space"
 quote-style = "double"
+
+[tool.mypy]
+python_version = '3.12'
+no_implicit_optional = true
+check_untyped_defs = true
+disallow_untyped_defs = true
+warn_unused_ignores = true
+warn_return_any = true
+# No [[tool.mypy.overrides]] section: this package has zero third-party imports,
+# so there are no missing stubs to silence.
+
+[tool.typos]
+# Taken from:
+# https://github.com/crate-ci/typos/blob/master/docs/reference.md#example-configurations
+default.extend-ignore-re = [
+  # Disable spell-checking for an individual line.
+  "(?Rm)^.*(#|//)\\s*spellchecker:disable-line$",
+  # Disable spell-checking for a code block.
+  "(?s)(#|//)\\s*spellchecker:off.*?\\n\\s*(#|//)\\s*spellchecker:on",
+]
+
+# RTF control words are not typos. These are spelled exactly as the RTF
+# Specification 1.9.1 and MS-OXRTFEX define them.
+[tool.typos.default.extend-words]
+ansi = "ansi"
+ansicpg = "ansicpg"
+cpg = "cpg"
+deff = "deff"
+falt = "falt"
+fcharset = "fcharset"
+fldinst = "fldinst"
+fldrslt = "fldrslt"
+fnil = "fnil"
+fonttbl = "fonttbl"
+htmlrtf = "htmlrtf"
+htmltag = "htmltag"
+lquote = "lquote"
+mhtmltag = "mhtmltag"
+pard = "pard"
+pngblip = "pngblip"
+rdblquote = "rdblquote"
+rquote = "rquote"
+stylesheet = "stylesheet"
+uc = "uc"
+
+[tool.pyright]
+venv = "default"
+venvPath = ".pixi/envs/"
