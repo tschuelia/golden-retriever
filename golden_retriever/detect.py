@@ -98,6 +98,7 @@ def has_rtf_heading(raw_rtf: bytes) -> bool:
     Reported rather than enforced; see this module's leniency notes.
 
     :param raw_rtf: Uncompressed RTF bytes.
+    :returns: ``True`` only when the exact RTF heading is present at byte zero.
     """
     return raw_rtf.startswith(RTF_HEADING)
 
@@ -121,6 +122,7 @@ def detect_content_type(
 
     :param raw_rtf: Uncompressed RTF bytes.
     :param header_token_limit: How many header tokens may precede the marker.
+    :returns: HTML, plain text, or native RTF classification.
     """
     inspected = 0
     for token in tokenize(raw_rtf):
@@ -144,5 +146,8 @@ def is_encapsulated_html(raw_rtf: bytes) -> bool:
 
     Shorthand for comparing :func:`detect_content_type` against
     :attr:`~golden_retriever.ContentType.HTML`.
+
+    :param raw_rtf: Uncompressed RTF bytes.
+    :returns: ``True`` only for a recognized ``\\fromhtml1`` document.
     """
     return detect_content_type(raw_rtf) is ContentType.HTML

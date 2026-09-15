@@ -254,10 +254,10 @@ def classify_destination(name: str, *, ignorable: bool) -> Destination | None:
     document starts, not somewhere a control word moves it to.
 
     HTMLTAG is checked before ``ignorable`` because it is the stated exception to the
-    ``\\*`` rule -- "other than the HTMLTAG destination group". It is also accepted
-    without the ``\\*``, which MS-OXRTFEX 2.1.3.1.4's ABNF includes: a producer that
-    omits it has still written a tag, and treating that as body text would emit RTF
-    markup into the output.
+    ``\\*`` rule -- "other than the HTMLTAG destination group". MS-OXRTFEX
+    2.1.3.1.4 requires the prefix. Accepting the group without it is a project
+    recovery policy: a producer that omits it has still written a tag, and treating
+    that as body text would emit RTF markup into the output.
 
     :param name: A control word name, without its backslash.
     :param ignorable: Whether ``\\*`` opened this group.

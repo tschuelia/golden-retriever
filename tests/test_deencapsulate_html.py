@@ -239,7 +239,7 @@ def test_a_delimiter_space_after_each_header_word_is_tolerated() -> None:
     assert result.diagnostics == ()
 
 
-# --- A tag group written without its \* (MS-OXRTFEX A<14>) ---
+# --- Recovery for a tag group missing the \* required by MS-OXRTFEX 2.1.3.1.4 ---
 
 
 def test_a_tag_group_without_the_star_is_read_as_a_tag_and_reported() -> None:

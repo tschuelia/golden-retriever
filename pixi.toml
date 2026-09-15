@@ -50,6 +50,15 @@ format = "ruff format golden_retriever tests"
 format-check = "ruff format --check golden_retriever tests"
 typecheck = "mypy golden_retriever tests"
 
+[feature.docs.dependencies]
+python = ">=3.12"
+mkdocs-material = "9.*"
+mkdocstrings-python = "1.*"
+
+[feature.docs.tasks]
+docs-serve = "mkdocs serve"
+docs-build = "mkdocs build --strict"
+
 [feature.py312.dependencies]
 python = "3.12.*"
 
@@ -65,3 +74,4 @@ py312 = ["py312", "test"]
 py313 = ["py313", "test"]
 py314 = ["py314", "test"]
 lint = { features = ["lint"], no-default-feature = true }
+docs = { features = ["docs"], no-default-feature = true }

@@ -66,6 +66,9 @@ def declared_charset(html: str) -> str | None:
 
     Recognizes both ``<meta charset=...>`` and the ``http-equiv`` form. The value is
     returned exactly as written -- not normalized, not validated against :mod:`codecs`.
+
+    :param html: Decoded HTML markup to inspect.
+    :returns: The first declaration in the document head, or ``None``.
     """
     span = _charset_span(html)
     if span is None:
@@ -82,9 +85,11 @@ def normalize_charset_declaration(html: str, encoding: str = "utf-8") -> str:
 
     :param encoding: The name to declare, written out as given. Only the declaration
         changes; nothing here re-encodes anything.
+    :param html: Decoded HTML markup to update.
     :raises ValueError: ``encoding`` names no codec Python can find. The name is
         interpolated into markup, so anything that is not a codec name is refused rather
         than written into the document.
+    :returns: Updated markup; ``html`` itself is not mutated.
     """
     try:
         codecs.lookup(encoding)

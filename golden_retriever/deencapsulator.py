@@ -370,11 +370,10 @@ class _Reader:
     def _report_unprefixed_htmltag(self) -> None:
         """Report an HTMLTAG destination group written without its ``\\*``.
 
-        MS-OXRTFEX 2.1.3.1.4 spells the destination ``\\*\\htmltag``, and note A<14>
-        records implementations that de-encapsulate the HTML anyway when a producer
-        leaves the ``\\*`` out. So the group is read as a tag either way, and only the
-        deviation from the grammar is reported: treating the fragment as body content
-        would emit RTF markup into the output.
+        MS-OXRTFEX 2.1.3.1.4 spells the destination ``\\*\\htmltag``. Reading the
+        group anyway is a project recovery policy, not documented Microsoft product
+        behavior. Only the deviation from the grammar is reported: treating the
+        fragment as body content would emit RTF markup into the output.
 
         Once per document: a producer that omits the ``\\*`` omits it on every tag, and
         one diagnostic per tag would bury everything else in the list.
@@ -536,6 +535,9 @@ def deencapsulate(
         type escapes this function for ``bytes`` input.
     :raises TypeError: ``raw_rtf`` is not ``bytes``.
     :raises ValueError: ``fallback_codepage`` names a code page with no decoder.
+    :returns: The decoded body, resolved encoding/font metadata, and any recoverable
+        diagnostics. Exactly one of :attr:`~golden_retriever.DeEncapsulationResult.html`
+        and :attr:`~golden_retriever.DeEncapsulationResult.text` is populated.
     """
     if not isinstance(raw_rtf, bytes):
         raise TypeError(f"raw_rtf must be bytes, not {type(raw_rtf).__name__}")

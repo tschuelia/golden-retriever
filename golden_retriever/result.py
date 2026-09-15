@@ -46,7 +46,7 @@ class DiagnosticCode(StrEnum):
     """The document does not start with ``{\\rtf1`` (MS-OXRTFEX A<13>)."""
 
     UNPREFIXED_HTMLTAG = "unprefixed-htmltag"
-    """An HTMLTAG destination group omitted its ``\\*`` (MS-OXRTFEX A<14>)."""
+    """An HTMLTAG group omitted the ``\\*`` required by MS-OXRTFEX 2.1.3.1.4."""
 
     UNBALANCED_GROUPS = "unbalanced-groups"
     """Groups were still open at end of input, or a stray ``}`` was found."""
@@ -73,7 +73,7 @@ class DiagnosticCode(StrEnum):
     """A font declared ``\\fcharset2`` (Symbol), which has no code page."""
 
     SKIPPED_DESTINATION = "skipped-destination"
-    """A non-visible destination group was skipped."""
+    """Reserved for a non-routine skipped destination; currently not emitted."""
 
 
 @dataclass(frozen=True, slots=True)
@@ -160,7 +160,10 @@ class DeEncapsulationResult:
 
     @property
     def body(self) -> str:
-        """The extracted content, whichever of HTML or plain text it is."""
+        """The extracted content, whichever of HTML or plain text it is.
+
+        :returns: :attr:`html` or :attr:`text`, whichever is populated.
+        """
         if self.html is not None:
             return self.html
         if self.text is not None:

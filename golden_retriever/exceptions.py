@@ -34,9 +34,9 @@ class MalformedRtfError(GoldenRetrieverError):
     """The input is structurally broken beyond what leniency covers.
 
     Only raised when ``strict=True``. Structural damage covered by this error is
-    a missing ``{\\rtf1`` header, groups left unbalanced at end of input, and a
-    ``\\bin`` payload that runs past the end of the data. In the default lenient
-    mode each of those is recorded as a
+    a missing ``{\\rtf1`` header, an HTMLTAG group without the required ``\\*``,
+    unbalanced groups, and a ``\\bin`` payload that runs past the end of the data.
+    In the default lenient mode each of those is recorded as a
     :class:`golden_retriever.Diagnostic` instead.
     """
 
