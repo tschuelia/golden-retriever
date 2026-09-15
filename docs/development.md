@@ -41,6 +41,19 @@ pixi run -e docs docs-serve
 After changing `pixi.toml`, run `pixi lock` and include `pixi.lock` in the same
 review.
 
+## Releases
+
+`pyproject.toml` deliberately contains the sentinel version `0.0.0`; do not bump
+it for a release. The package workflow accepts exact `vMAJOR.MINOR.PATCH` tags,
+removes the leading `v`, inserts that version into the build checkout, and
+verifies it against the installed wheel. Untagged pull-request and `main` builds
+retain the sentinel.
+
+GitHub source archives contain the committed sentinel rather than the workflow's
+temporary replacement. A downstream recipe that builds an archive, including
+the conda-forge recipe, must replace the anchored `version = "0.0.0"` declaration
+with its recipe version before invoking pip.
+
 ## Specification provenance
 
 All RTF behavior must be derived from:

@@ -4,7 +4,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "golden-retriever"
-version = "0.1.0"
+# Replaced from a vMAJOR.MINOR.PATCH tag by the package workflow and by
+# downstream package recipes that build a GitHub source archive.
+version = "0.0.0"
 description = "Extract HTML embedded in RTF (MS-OXRTFEX de-encapsulation)."
 readme = "README.md"
 requires-python = ">=3.12"

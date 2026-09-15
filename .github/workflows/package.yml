@@ -1,0 +1,78 @@
+name: Package
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+    tags: ["v*"]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build package
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Set up Pixi
+        uses: prefix-dev/setup-pixi@d3f436a425481402e6a95a1d1fc10331c708cd9e # v0.10.2
+        with:
+          frozen: true
+      - name: Derive version from tag
+        id: version
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: bash
+        run: |
+          tag="${GITHUB_REF#refs/tags/}"
+          if [[ ! "${tag}" =~ ^v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)$ ]]; then
+            echo "expected a vMAJOR.MINOR.PATCH tag, got ${tag}" >&2
+            exit 1
+          fi
+          if [[ "$(git rev-list -n 1 "${tag}")" != "$(git rev-parse HEAD)" ]]; then
+            echo "tag ${tag} does not resolve to the checked-out commit" >&2
+            exit 1
+          fi
+          echo "version=${tag#v}" >> "${GITHUB_OUTPUT}"
+      - name: Insert release version
+        if: startsWith(github.ref, 'refs/tags/')
+        env:
+          RELEASE_VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          test "$(grep -Fxc 'version = "0.0.0"' pyproject.toml)" = 1
+          sed -i -e 's/^version = "0\.0\.0"$/version = "'"${RELEASE_VERSION}"'"/' pyproject.toml
+          grep -Fqx 'version = "'"${RELEASE_VERSION}"'"' pyproject.toml
+      - name: Build distributions
+        run: pixi run --frozen hatchling build -d dist
+      - name: Install wheel
+        run: >-
+          pixi run --frozen python -m pip install
+          --force-reinstall --no-deps --disable-pip-version-check dist/*.whl
+      - name: Check installed requirements
+        run: pixi run --frozen python -m pip check
+      - name: Verify installed version
+        env:
+          EXPECTED_VERSION: ${{ steps.version.outputs.version || '0.0.0' }}
+        run: >-
+          pixi run --frozen python -I -c
+          "import golden_retriever as gr, os;
+          assert gr.__version__ == os.environ['EXPECTED_VERSION'],
+          (gr.__version__, os.environ['EXPECTED_VERSION'])"
+      - name: Upload release artifacts
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: golden-retriever-${{ steps.version.outputs.version }}
+          path: |
+            dist/*.tar.gz
+            dist/*.whl
+          if-no-files-found: error
