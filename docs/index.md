@@ -48,5 +48,6 @@ decompressing `PidTagRtfCompressed` are upstream tasks.
 - Explicit diagnostics for every tolerated defect.
 - No network access, attachment lookup, HTML execution, or sanitization.
 
-The API is usable, but the project version is still `0.0.0`; treat compatibility
-as experimental until a release policy is published.
+Releases follow semantic versioning. During the `0.x` series, public APIs can
+change between minor releases; incompatible changes are documented in the
+release notes.

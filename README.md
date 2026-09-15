@@ -17,14 +17,20 @@ It has no runtime dependencies.
 
 ## Install
 
-This project has not published a distribution. Install it from a checkout:
+Install the package from conda-forge:
 
 ```console
-python -m pip install .
+conda install -c conda-forge golden-retriever
 ```
 
-The similarly named package currently found on PyPI is unrelated to this
-repository.
+With Pixi, add it to a workspace instead:
+
+```console
+pixi add golden-retriever
+```
+
+The package named `golden-retriever` on PyPI is unrelated to this repository;
+do not install that package as a substitute.
 
 ## Use
 

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "golden-retriever"
-version = "0.0.0"
+version = "0.1.0"
 description = "Extract HTML embedded in RTF (MS-OXRTFEX de-encapsulation)."
 readme = "README.md"
 requires-python = ">=3.12"
@@ -31,6 +31,8 @@ classifiers = [
 ]
 
 [project.urls]
+Documentation = "https://tschuelia.github.io/golden-retriever/"
+Issues = "https://github.com/tschuelia/golden-retriever/issues"
 Repository = "https://github.com/tschuelia/golden-retriever"
 
 [tool.hatch.build.targets.wheel]

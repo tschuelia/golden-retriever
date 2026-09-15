@@ -2,15 +2,21 @@
 
 ## Installation
 
-The project has not published a package distribution. Install from a checkout:
+Install the package from conda-forge:
 
 ```console
-git clone https://github.com/tschuelia/golden-retriever.git
-cd golden-retriever
-python -m pip install .
+conda install -c conda-forge golden-retriever
 ```
 
-Do not install the similarly named project currently on PyPI; it is unrelated.
+With Pixi, add it to a workspace instead:
+
+```console
+pixi add golden-retriever
+```
+
+The package named `golden-retriever` on PyPI is unrelated to this repository;
+do not install that package as a substitute.
+
 Python 3.12 or newer is required.
 
 ## Detect before extracting
