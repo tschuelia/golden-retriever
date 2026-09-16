@@ -9,7 +9,7 @@ import codecs
 
 import pytest
 
-from golden_retriever.codepages import (
+from ottertf.codepages import (
     ANSI_CHARSET,
     CODEPAGE_TO_CODEC,
     DEFAULT_CHARSET,

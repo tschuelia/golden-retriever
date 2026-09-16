@@ -1,8 +1,8 @@
-site_name: golden-retriever
+site_name: otteRTF 🦦
 site_description: Extract HTML embedded in RTF according to MS-OXRTFEX
-site_url: https://tschuelia.github.io/golden-retriever/
-repo_url: https://github.com/tschuelia/golden-retriever
-repo_name: tschuelia/golden-retriever
+site_url: https://tschuelia.github.io/ottertf/
+repo_url: https://github.com/tschuelia/ottertf
+repo_name: tschuelia/ottertf
 edit_uri: edit/main/docs/
 docs_dir: docs
 site_dir: site

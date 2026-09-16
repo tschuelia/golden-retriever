@@ -9,10 +9,10 @@ the two regressions that would each lose content silently.
 
 import pytest
 
-from golden_retriever.deencapsulator import deencapsulate
-from golden_retriever.emitter import REPLACEMENT_CHARACTER
-from golden_retriever.exceptions import MalformedRtfError
-from golden_retriever.result import ContentType, DeEncapsulationResult, DiagnosticCode
+from ottertf.deencapsulator import deencapsulate
+from ottertf.emitter import REPLACEMENT_CHARACTER
+from ottertf.exceptions import MalformedRtfError
+from ottertf.result import ContentType, DeEncapsulationResult, DiagnosticCode
 
 FFFD = REPLACEMENT_CHARACTER
 

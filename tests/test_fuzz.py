@@ -8,7 +8,7 @@ Two generators, both seeded from one constant so that a failure reproduces exact
   somewhere deep in the reader instead of in its first few tokens.
 
 What is being fuzzed is the promise the README makes, not any particular output: for any
-``bytes`` input, only a :class:`~golden_retriever.GoldenRetrieverError` escapes, the body
+``bytes`` input, only a :class:`~ottertf.OtteRTFError` escapes, the body
 is always encodable as UTF-8, and ``strict`` decides whether a problem is raised rather
 than which characters come out.
 
@@ -22,8 +22,8 @@ from collections.abc import Callable
 import pytest
 from conftest import GOLDEN_DOCUMENTS, read_bytes
 
-from golden_retriever import ContentType, GoldenRetrieverError, deencapsulate
-from golden_retriever.detect import detect_content_type
+from ottertf import ContentType, OtteRTFError, deencapsulate
+from ottertf.detect import detect_content_type
 
 SEED = 1252
 """Fixed, so that a failing case is the same case tomorrow.
@@ -152,7 +152,7 @@ def _mutate(rng: random.Random, data: bytes) -> bytes:
 def _survives(data: bytes) -> bool:
     """Whether ``data`` de-encapsulates, having checked everything promised of it.
 
-    Anything other than a :class:`~golden_retriever.GoldenRetrieverError` propagates out
+    Anything other than a :class:`~ottertf.OtteRTFError` propagates out
     of here and fails the calling test, which is the assertion this whole module exists
     to make.
     """
@@ -162,9 +162,9 @@ def _survives(data: bytes) -> bool:
 
     try:
         lenient = deencapsulate(data)
-    except GoldenRetrieverError:
+    except OtteRTFError:
         # Strict is only ever allowed to raise more, so there is nothing left to check.
-        with pytest.raises(GoldenRetrieverError):
+        with pytest.raises(OtteRTFError):
             deencapsulate(data, strict=True)
         return False
 
@@ -176,7 +176,7 @@ def _survives(data: bytes) -> bool:
 
     try:
         strict = deencapsulate(data, strict=True)
-    except GoldenRetrieverError:
+    except OtteRTFError:
         return True
     assert strict.body == lenient.body, data
     return True

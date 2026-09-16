@@ -1,13 +1,13 @@
-# Golden Retriever 🦮
+# otteRTF 🦦
 
-[![CI](https://github.com/tschuelia/golden-retriever/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tschuelia/golden-retriever/actions/workflows/ci.yml)
-[![Documentation](https://github.com/tschuelia/golden-retriever/actions/workflows/docs.yml/badge.svg?branch=main)](https://tschuelia.github.io/golden-retriever/)
+[![CI](https://github.com/tschuelia/ottertf/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/tschuelia/ottertf/actions/workflows/ci.yml)
+[![Documentation](https://github.com/tschuelia/ottertf/actions/workflows/docs.yml/badge.svg?branch=main)](https://tschuelia.github.io/ottertf/)
 
 Recover the original HTML from RTF-encapsulated HTML: the `\fromhtml1` form
 that Microsoft Outlook and Exchange can store in a message's
 `PidTagRtfCompressed` property.
 
-golden-retriever implements de-encapsulation from
+otteRTF 🦦 implements de-encapsulation from
 [MS-OXRTFEX](https://learn.microsoft.com/en-us/openspecs/exchange_server_protocols/ms-oxrtfex/906fbb0f-2467-490e-8c3e-bdc31c5e9d35),
 using the
 [RTF 1.9.1 specification](<https://learn.microsoft.com/en-us/previous-versions/office/developer/office-2007/dd351035(v=office.12)>)
@@ -20,17 +20,26 @@ It has no runtime dependencies.
 Install the package from conda-forge:
 
 ```console
-conda install -c conda-forge golden-retriever
+conda install -c conda-forge ottertf
 ```
 
 With Pixi, add it to a workspace instead:
 
 ```console
-pixi add golden-retriever
+pixi add ottertf
 ```
 
-The package named `golden-retriever` on PyPI is unrelated to this repository;
-do not install that package as a substitute.
+Alternatively, install it from PyPI:
+
+```console
+python -m pip install ottertf
+```
+
+Or add the PyPI package with Pixi:
+
+```console
+pixi add --pypi ottertf
+```
 
 ## Use
 
@@ -38,15 +47,15 @@ Pass **uncompressed RTF bytes**, not an `.msg` file and not the compressed
 `PidTagRtfCompressed` payload:
 
 ```python
-import golden_retriever as gr
+import ottertf
 
 raw_rtf: bytes = ...
 
-content_type = gr.detect_content_type(raw_rtf)
-if content_type is gr.ContentType.NATIVE_RTF:
+content_type = ottertf.detect_content_type(raw_rtf)
+if content_type is ottertf.ContentType.NATIVE_RTF:
     raise ValueError("the message contains ordinary RTF")
 
-result = gr.deencapsulate(raw_rtf)
+result = ottertf.deencapsulate(raw_rtf)
 print(result.content_type)  # ContentType.HTML or ContentType.TEXT
 print(result.body)  # decoded str
 print(result.diagnostics)
@@ -57,7 +66,7 @@ result is already a Python `str`. If you serialize as UTF-8, make the declaratio
 agree first:
 
 ```python
-html = gr.normalize_charset_declaration(result.body, "utf-8")
+html = ottertf.normalize_charset_declaration(result.body, "utf-8")
 with open("mail.html", "w", encoding="utf-8") as output:
     output.write(html)
 ```
@@ -72,14 +81,14 @@ The package performs one deliberately narrow step:
 
 ```text
 .msg container -> RTF-compressed bytes -> uncompressed RTF -> HTML
-       caller             caller          golden-retriever
+       caller             caller          otteRTF 🦦
 ```
 
 It does not parse `.msg` compound files, decompress the RTF compression wrapper,
 render native RTF, resolve `cid:` attachments, fetch resources, or sanitize HTML.
 The returned markup is untrusted input and must be sanitized before browser use.
 
-Read the [documentation](https://tschuelia.github.io/golden-retriever/) for the
+Read the [documentation](https://tschuelia.github.io/ottertf/) for the
 format history, annotated examples, extraction algorithm, encoding rules,
 diagnostic policy, conformance notes, and API reference.
 
@@ -97,7 +106,7 @@ pixi run -e docs docs-serve
 ```
 
 Slow performance checks are available with `pixi run test-slow`. See the
-[development guide](https://tschuelia.github.io/golden-retriever/development/)
+[development guide](https://tschuelia.github.io/ottertf/development/)
 for the supported Python matrix and fixture rules.
 
 ## License

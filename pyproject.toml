@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "golden-retriever"
+name = "ottertf"
 # Replaced from a vMAJOR.MINOR.PATCH tag by the package workflow and by
 # downstream package recipes that build a GitHub source archive.
 version = "0.0.0"
@@ -33,12 +33,12 @@ classifiers = [
 ]
 
 [project.urls]
-Documentation = "https://tschuelia.github.io/golden-retriever/"
-Issues = "https://github.com/tschuelia/golden-retriever/issues"
-Repository = "https://github.com/tschuelia/golden-retriever"
+Documentation = "https://tschuelia.github.io/ottertf/"
+Issues = "https://github.com/tschuelia/ottertf/issues"
+Repository = "https://github.com/tschuelia/ottertf"
 
 [tool.hatch.build.targets.wheel]
-packages = ["golden_retriever"]
+packages = ["ottertf"]
 
 [tool.pytest.ini_options]
 addopts = "--import-mode=importlib -m 'not slow'"
@@ -51,7 +51,7 @@ markers = ["slow: performance checks, deselected by default"]
 
 [tool.coverage.run]
 branch = true
-source = ["golden_retriever"]
+source = ["ottertf"]
 
 [tool.coverage.report]
 show_missing = true

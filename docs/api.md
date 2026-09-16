@@ -1,48 +1,48 @@
 # API reference
 
-The supported import surface is available directly from `golden_retriever`.
+The supported import surface is available directly from `ottertf`.
 
 ## Extraction
 
-::: golden_retriever.deencapsulator.deencapsulate
+::: ottertf.deencapsulator.deencapsulate
 
 ## Detection
 
-::: golden_retriever.detect.detect_content_type
+::: ottertf.detect.detect_content_type
 
-::: golden_retriever.detect.is_encapsulated_html
+::: ottertf.detect.is_encapsulated_html
 
 ## HTML charset helpers
 
-::: golden_retriever.html_meta.declared_charset
+::: ottertf.html_meta.declared_charset
 
-::: golden_retriever.html_meta.normalize_charset_declaration
+::: ottertf.html_meta.normalize_charset_declaration
 
 ## Result types
 
-::: golden_retriever.result.ContentType
+::: ottertf.result.ContentType
 
-::: golden_retriever.result.DeEncapsulationResult
+::: ottertf.result.DeEncapsulationResult
 
-::: golden_retriever.result.Diagnostic
+::: ottertf.result.Diagnostic
 
-::: golden_retriever.result.DiagnosticCode
+::: ottertf.result.DiagnosticCode
 
-::: golden_retriever.result.FontInfo
+::: ottertf.result.FontInfo
 
 ## Exceptions
 
-::: golden_retriever.exceptions.GoldenRetrieverError
+::: ottertf.exceptions.OtteRTFError
 
-::: golden_retriever.exceptions.NotEncapsulatedRtfError
+::: ottertf.exceptions.NotEncapsulatedRtfError
 
-::: golden_retriever.exceptions.MalformedRtfError
+::: ottertf.exceptions.MalformedRtfError
 
-::: golden_retriever.exceptions.MissingFontTableError
+::: ottertf.exceptions.MissingFontTableError
 
-::: golden_retriever.exceptions.UnsupportedCodePageError
+::: ottertf.exceptions.UnsupportedCodePageError
 
 ## Version
 
-`golden_retriever.__version__` contains the installed distribution version, or
+`ottertf.__version__` contains the installed distribution version, or
 `"0.0.0"` when the source tree is imported without installed package metadata.

@@ -1,5 +1,5 @@
 [workspace]
-name = "golden-retriever"
+name = "ottertf"
 description = "Extract HTML embedded in RTF (MS-OXRTFEX de-encapsulation)."
 channels = ["conda-forge"]
 platforms = ["linux-64", "linux-aarch64", "osx-64", "osx-arm64", "win-64"]
@@ -19,7 +19,7 @@ pytest-cov = "*"
 [feature.test.tasks]
 test = "pytest"
 test-slow = "pytest -m slow"
-test-coverage = "pytest --cov=golden_retriever --cov-report=term-missing"
+test-coverage = "pytest --cov=ottertf --cov-report=term-missing"
 
 [feature.lint.dependencies]
 lefthook = "*"
@@ -45,10 +45,10 @@ zizmor = "*"
 pre-commit-install = "lefthook install"
 lint = "lefthook run pre-commit --all-files"
 # Fast escape hatches for running a single tool.
-ruff-check = "ruff check golden_retriever tests"
-format = "ruff format golden_retriever tests"
-format-check = "ruff format --check golden_retriever tests"
-typecheck = "mypy golden_retriever tests"
+ruff-check = "ruff check ottertf tests"
+format = "ruff format ottertf tests"
+format-check = "ruff format --check ottertf tests"
+typecheck = "mypy ottertf tests"
 
 [feature.docs.dependencies]
 python = ">=3.12"

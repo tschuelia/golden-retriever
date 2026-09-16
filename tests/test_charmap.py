@@ -8,7 +8,7 @@ removed row has to be justified in review.
 
 import pytest
 
-from golden_retriever.charmap import BODY_CHARMAP, HTMLTAG_CHARMAP, CharMap
+from ottertf.charmap import BODY_CHARMAP, HTMLTAG_CHARMAP, CharMap
 
 CHARMAPS = [BODY_CHARMAP, HTMLTAG_CHARMAP]
 

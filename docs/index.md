@@ -1,6 +1,6 @@
 # Recover the HTML hidden inside RTF
 
-golden-retriever extracts the original HTML or plain text carried by a Microsoft
+otteRTF 🦦 extracts the original HTML or plain text carried by a Microsoft
 RTF encapsulation document. This is the `\fromhtml1` / `\fromtext` format
 specified by
 [MS-OXRTFEX](https://learn.microsoft.com/en-us/openspecs/exchange_server_protocols/ms-oxrtfex/411d0d58-49f7-496c-b8c3-5859b045f6cf),

@@ -9,15 +9,15 @@ from collections.abc import Mapping
 
 import pytest
 
-from golden_retriever.fonts import (
+from ottertf.fonts import (
     FontEntry,
     FontTable,
     parse_font_table,
     resolve_fonts,
 )
-from golden_retriever.groups import FONTTBL_WORD
-from golden_retriever.result import Diagnostic, DiagnosticCode, FontInfo
-from golden_retriever.tokenizer import Token, TokenKind, tokenize
+from ottertf.groups import FONTTBL_WORD
+from ottertf.result import Diagnostic, DiagnosticCode, FontInfo
+from ottertf.tokenizer import Token, TokenKind, tokenize
 
 SPEC_EXAMPLE = (
     b"{\\rtf1\\ansi\\ansicpg1252\\deff0{\\fonttbl "

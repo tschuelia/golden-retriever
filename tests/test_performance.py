@@ -14,7 +14,7 @@ import time
 
 import pytest
 
-from golden_retriever import ContentType, deencapsulate
+from ottertf import ContentType, deencapsulate
 
 DOCUMENT_SIZE = 250_000
 """How many bytes to build: more than any mail body, enough for a quadratic path to

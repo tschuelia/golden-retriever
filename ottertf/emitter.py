@@ -74,7 +74,7 @@ import re
 from collections.abc import Mapping
 from typing import NamedTuple
 
-from golden_retriever.result import Diagnostic, DiagnosticCode
+from ottertf.result import Diagnostic, DiagnosticCode
 
 __all__ = ["REPLACEMENT_CHARACTER", "Emitted", "Emitter"]
 
@@ -205,7 +205,7 @@ class Emitter:
 
         Call once, after the whole document has been scanned. Codec names are taken
         as given: they come from
-        :func:`~golden_retriever.codepages.encoding_for_codepage`, which only ever
+        :func:`~ottertf.codepages.encoding_for_codepage`, which only ever
         returns a name :mod:`codecs` resolves.
 
         :param font_encodings: Codec name per ``\\fN`` identifier, from the completed

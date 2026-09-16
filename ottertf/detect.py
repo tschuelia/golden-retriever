@@ -40,7 +40,7 @@ Leniency
   \\rtf1 keyword at the beginning of the RTF encoded text and try to
   de-encapsulate the text anyway". This module does the same:
   :func:`has_rtf_heading` reports the heading separately, so a caller can record a
-  :attr:`~golden_retriever.DiagnosticCode.MISSING_RTF_MAGIC` diagnostic without
+  :attr:`~ottertf.DiagnosticCode.MISSING_RTF_MAGIC` diagnostic without
   discarding content that is plainly encapsulated.
 - **A whitespace-only text token does not end the inspection,** though it does
   spend one token of the window. Bare CR and LF are insignificant already (RTF
@@ -59,8 +59,8 @@ as ``\\*``, a ``\\'hh`` escape and a ``\\binN`` payload each mean native RTF,
 because none of them is a begin group mark or a control word.
 """
 
-from golden_retriever.result import ContentType
-from golden_retriever.tokenizer import Token, TokenKind, tokenize
+from ottertf.result import ContentType
+from ottertf.tokenizer import Token, TokenKind, tokenize
 
 __all__ = [
     "DEFAULT_HEADER_TOKEN_LIMIT",
@@ -118,7 +118,7 @@ def detect_content_type(
 
     This only lexes the document header, so it is cheap enough to call as a guard. It
     never raises for malformed input: anything unrecognizable is
-    :attr:`~golden_retriever.ContentType.NATIVE_RTF`.
+    :attr:`~ottertf.ContentType.NATIVE_RTF`.
 
     :param raw_rtf: Uncompressed RTF bytes.
     :param header_token_limit: How many header tokens may precede the marker.
@@ -145,7 +145,7 @@ def is_encapsulated_html(raw_rtf: bytes) -> bool:
     """Whether ``raw_rtf`` encapsulates HTML.
 
     Shorthand for comparing :func:`detect_content_type` against
-    :attr:`~golden_retriever.ContentType.HTML`.
+    :attr:`~ottertf.ContentType.HTML`.
 
     :param raw_rtf: Uncompressed RTF bytes.
     :returns: ``True`` only for a recognized ``\\fromhtml1`` document.

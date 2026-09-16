@@ -12,8 +12,8 @@ red. The mutation fuzz reads the same list.
 import pytest
 from conftest import HTML_PAIRS, TEXT_PAIRS, read_bytes
 
-from golden_retriever import deencapsulate
-from golden_retriever.result import ContentType
+from ottertf import deencapsulate
+from ottertf.result import ContentType
 
 PAIRS = [(name, "txt", ContentType.TEXT) for name in TEXT_PAIRS] + [
     (name, "html", ContentType.HTML) for name in HTML_PAIRS

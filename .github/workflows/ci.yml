@@ -1,4 +1,4 @@
-name: CI
+name: otteRTF 🦦 CI
 
 on:
   pull_request:
