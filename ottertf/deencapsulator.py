@@ -86,7 +86,7 @@ as a pair rather than as one half and a discarded control word.
 Strictness
 ==========
 
-Every problem is recorded as a :class:`~golden_retriever.Diagnostic`. With
+Every problem is recorded as a :class:`~ottertf.Diagnostic`. With
 ``strict=True`` the structural subset of them -- the ones in :data:`_STRICT_ERRORS`,
 which describe damage to the document rather than to its content -- is raised instead,
 at the point it is found. Both modes take the same path and produce the same characters
@@ -97,39 +97,39 @@ import logging
 from collections.abc import Iterable, Iterator, Mapping
 from types import MappingProxyType
 
-from golden_retriever.charmap import BODY_CHARMAP, HTMLTAG_CHARMAP, CharMap
-from golden_retriever.codepages import encoding_for_codepage
-from golden_retriever.detect import (
+from ottertf.charmap import BODY_CHARMAP, HTMLTAG_CHARMAP, CharMap
+from ottertf.codepages import encoding_for_codepage
+from ottertf.detect import (
     DEFAULT_HEADER_TOKEN_LIMIT,
     RTF_HEADING,
     detect_content_type,
     has_rtf_heading,
 )
-from golden_retriever.emitter import Emitter
-from golden_retriever.exceptions import (
-    GoldenRetrieverError,
+from ottertf.emitter import Emitter
+from ottertf.exceptions import (
     MalformedRtfError,
     MissingFontTableError,
     NotEncapsulatedRtfError,
+    OtteRTFError,
     UnsupportedCodePageError,
 )
-from golden_retriever.fonts import FONT_WORD, FontEntry, parse_font_table, resolve_fonts
-from golden_retriever.groups import (
+from ottertf.fonts import FONT_WORD, FontEntry, parse_font_table, resolve_fonts
+from ottertf.groups import (
     IGNORABLE_SYMBOL,
     Destination,
     Frame,
     GroupStack,
     classify_destination,
 )
-from golden_retriever.html_meta import declared_charset
-from golden_retriever.result import (
+from ottertf.html_meta import declared_charset
+from ottertf.result import (
     ContentType,
     DeEncapsulationResult,
     Diagnostic,
     DiagnosticCode,
     FontInfo,
 )
-from golden_retriever.tokenizer import Token, TokenKind, tokenize
+from ottertf.tokenizer import Token, TokenKind, tokenize
 
 __all__ = ["DEFAULT_FALLBACK_CODEPAGE", "deencapsulate"]
 
@@ -161,7 +161,7 @@ _UNICODE_SKIP_WORD = "uc"
 _TOGGLE_OFF = 0
 """The parameter that disables a toggle control word, as ``\\htmlrtf0`` does."""
 
-_STRICT_ERRORS: Mapping[str, type[GoldenRetrieverError]] = MappingProxyType(
+_STRICT_ERRORS: Mapping[str, type[OtteRTFError]] = MappingProxyType(
     {
         # Structural damage: something is wrong with the document rather than with
         # the content it carries. Under strict these stop the read.
@@ -523,21 +523,21 @@ def deencapsulate(
     :param raw_rtf: Uncompressed RTF bytes. If the content is stored as
         ``PidTagRtfCompressed``, decompress it first.
     :param strict: Raise on structural damage instead of recording a
-        :class:`~golden_retriever.Diagnostic` and carrying on. This never changes which
+        :class:`~ottertf.Diagnostic` and carrying on. This never changes which
         characters are produced -- only whether a problem is raised or reported.
     :param fallback_codepage: Code page to assume when the document declares no usable
         ``\\ansicpgN``.
     :param header_token_limit: How many header tokens may precede the ``\\fromhtml1`` /
         ``\\fromtext`` marker.
-    :raises golden_retriever.NotEncapsulatedRtfError: The document is native RTF. Call
-        :func:`~golden_retriever.detect_content_type` first to avoid this.
-    :raises golden_retriever.GoldenRetrieverError: Any other failure. No other exception
+    :raises ottertf.NotEncapsulatedRtfError: The document is native RTF. Call
+        :func:`~ottertf.detect_content_type` first to avoid this.
+    :raises ottertf.OtteRTFError: Any other failure. No other exception
         type escapes this function for ``bytes`` input.
     :raises TypeError: ``raw_rtf`` is not ``bytes``.
     :raises ValueError: ``fallback_codepage`` names a code page with no decoder.
     :returns: The decoded body, resolved encoding/font metadata, and any recoverable
-        diagnostics. Exactly one of :attr:`~golden_retriever.DeEncapsulationResult.html`
-        and :attr:`~golden_retriever.DeEncapsulationResult.text` is populated.
+        diagnostics. Exactly one of :attr:`~ottertf.DeEncapsulationResult.html`
+        and :attr:`~ottertf.DeEncapsulationResult.text` is populated.
     """
     if not isinstance(raw_rtf, bytes):
         raise TypeError(f"raw_rtf must be bytes, not {type(raw_rtf).__name__}")

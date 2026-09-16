@@ -46,13 +46,17 @@ review.
 `pyproject.toml` deliberately contains the sentinel version `0.0.0`; do not bump
 it for a release. The package workflow accepts exact `vMAJOR.MINOR.PATCH` tags,
 removes the leading `v`, inserts that version into the build checkout, and
-verifies it against the installed wheel. Untagged pull-request and `main` builds
-retain the sentinel.
+verifies it against the installed wheel. A tagged build publishes the verified
+wheel and source distribution to PyPI through Trusted Publishing after approval
+in the `pypi` GitHub environment. Untagged pull-request and `main` builds retain
+the sentinel and never publish.
 
 GitHub source archives contain the committed sentinel rather than the workflow's
-temporary replacement. A downstream recipe that builds an archive, including
-the conda-forge recipe, must replace the anchored `version = "0.0.0"` declaration
-with its recipe version before invoking pip.
+temporary replacement. The conda-forge recipe should therefore use the PyPI
+source distribution, which already contains the release version inserted by the
+workflow. Any downstream recipe that instead builds a GitHub source archive must
+replace the anchored `version = "0.0.0"` declaration with its recipe version
+before invoking pip.
 
 ## Specification provenance
 

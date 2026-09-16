@@ -52,7 +52,7 @@ SYMBOL_CHARSET = 2
 
 Symbol fonts map bytes to glyphs, not to characters, so no code page can decode
 them correctly. Callers get a
-:attr:`~golden_retriever.DiagnosticCode.SYMBOL_FONT_CHARSET` diagnostic and the
+:attr:`~ottertf.DiagnosticCode.SYMBOL_FONT_CHARSET` diagnostic and the
 document default is used.
 """
 
@@ -173,7 +173,7 @@ def encoding_for_codepage(codepage: int) -> str | None:
 
     ``None`` means "no decoder available"; the caller should fall back to the
     document default and record an
-    :attr:`~golden_retriever.DiagnosticCode.UNSUPPORTED_CODEPAGE` diagnostic
+    :attr:`~ottertf.DiagnosticCode.UNSUPPORTED_CODEPAGE` diagnostic
     rather than raise, unless running in strict mode.
     """
     if codepage in _EXCLUDED_CODEPAGES:

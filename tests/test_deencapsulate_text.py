@@ -11,15 +11,15 @@ import logging
 
 import pytest
 
-from golden_retriever.deencapsulator import deencapsulate
-from golden_retriever.emitter import REPLACEMENT_CHARACTER
-from golden_retriever.exceptions import (
+from ottertf.deencapsulator import deencapsulate
+from ottertf.emitter import REPLACEMENT_CHARACTER
+from ottertf.exceptions import (
     MalformedRtfError,
     MissingFontTableError,
     NotEncapsulatedRtfError,
     UnsupportedCodePageError,
 )
-from golden_retriever.result import ContentType, DeEncapsulationResult, DiagnosticCode
+from ottertf.result import ContentType, DeEncapsulationResult, DiagnosticCode
 
 FFFD = REPLACEMENT_CHARACTER
 
@@ -408,7 +408,7 @@ def test_a_skipped_destination_is_logged_rather_than_diagnosed(
     It is also the one action that drops content silently, so every skip is traceable at
     debug level.
     """
-    with caplog.at_level(logging.DEBUG, logger="golden_retriever.deencapsulator"):
+    with caplog.at_level(logging.DEBUG, logger="ottertf.deencapsulator"):
         result = run(b"{\\colortbl;}{\\*\\generator X;}")
     assert result.diagnostics == ()
     assert [record.getMessage() for record in caplog.records] == [
@@ -500,7 +500,7 @@ def test_the_first_code_page_declaration_wins() -> None:
 
 
 def test_a_code_page_with_no_decoder_falls_back_and_is_reported() -> None:
-    """1200 is UTF-16LE, which :func:`~golden_retriever.codepages.encoding_for_codepage`
+    """1200 is UTF-16LE, which :func:`~ottertf.codepages.encoding_for_codepage`
     excludes deliberately: it is not byte-oriented, so decoding a document of ``\\'HH``
     escapes with it would produce plausible garbage instead of an answer a caller can
     distrust."""

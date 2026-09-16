@@ -10,15 +10,15 @@ from collections.abc import Iterator
 
 import pytest
 
-from golden_retriever.detect import (
+from ottertf.detect import (
     DEFAULT_HEADER_TOKEN_LIMIT,
     RTF_HEADING,
     detect_content_type,
     has_rtf_heading,
     is_encapsulated_html,
 )
-from golden_retriever.result import ContentType
-from golden_retriever.tokenizer import Token, tokenize
+from ottertf.result import ContentType
+from ottertf.tokenizer import Token, tokenize
 
 ENCAPSULATED_HTML = (
     b"{\\rtf1\\ansi\\ansicpg1252\\fromhtml1\\deff0"
@@ -243,7 +243,7 @@ def test_inspection_reads_the_header_and_not_the_body(
             pulled += 1
             yield token
 
-    monkeypatch.setattr("golden_retriever.detect.tokenize", counting_tokenize)
+    monkeypatch.setattr("ottertf.detect.tokenize", counting_tokenize)
     document = NINE_HEADER_TOKENS + b"\\f0\\fs20 " + b"body " * 20_000 + b"}"
     assert detect_content_type(document) is ContentType.NATIVE_RTF
     assert pulled <= DEFAULT_HEADER_TOKEN_LIMIT + 1

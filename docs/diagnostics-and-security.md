@@ -35,16 +35,16 @@ ordinary RTF, because rendering is not attempted.
 
 ## Exception boundary
 
-All intentional parser exceptions inherit `GoldenRetrieverError`. Programming
+All intentional parser exceptions inherit `OtteRTFError`. Programming
 contract errors remain standard exceptions: a non-`bytes` input can raise
 `TypeError`, and an invalid fallback code-page argument can raise `ValueError`.
 
 ```python
 try:
-    result = golden_retriever.deencapsulate(raw_rtf, strict=True)
-except golden_retriever.NotEncapsulatedRtfError:
+    result = ottertf.deencapsulate(raw_rtf, strict=True)
+except ottertf.NotEncapsulatedRtfError:
     use_an_rtf_renderer(raw_rtf)
-except golden_retriever.GoldenRetrieverError as error:
+except ottertf.OtteRTFError as error:
     quarantine_message(error)
 ```
 

@@ -5,17 +5,26 @@
 Install the package from conda-forge:
 
 ```console
-conda install -c conda-forge golden-retriever
+conda install -c conda-forge ottertf
 ```
 
 With Pixi, add it to a workspace instead:
 
 ```console
-pixi add golden-retriever
+pixi add ottertf
 ```
 
-The package named `golden-retriever` on PyPI is unrelated to this repository;
-do not install that package as a substitute.
+Alternatively, install it from PyPI:
+
+```console
+python -m pip install ottertf
+```
+
+Or add the PyPI package with Pixi:
+
+```console
+pixi add --pypi ottertf
+```
 
 Python 3.12 or newer is required.
 
@@ -24,16 +33,16 @@ Python 3.12 or newer is required.
 The detector reads only a bounded header prefix, following MS-OXRTFEX §2.2.3.1:
 
 ```python
-import golden_retriever as gr
+import ottertf
 
 raw_rtf = b"{\\rtf1\\ansi\\fromhtml1 ...}"
 
-match gr.detect_content_type(raw_rtf):
-    case gr.ContentType.HTML:
+match ottertf.detect_content_type(raw_rtf):
+    case ottertf.ContentType.HTML:
         print("encapsulated HTML")
-    case gr.ContentType.TEXT:
+    case ottertf.ContentType.TEXT:
         print("encapsulated plain text")
-    case gr.ContentType.NATIVE_RTF:
+    case ottertf.ContentType.NATIVE_RTF:
         print("ordinary or unrecognized RTF")
 ```
 
@@ -44,7 +53,7 @@ nonconforming input.
 ## Extract content
 
 ```python
-result = gr.deencapsulate(raw_rtf)
+result = ottertf.deencapsulate(raw_rtf)
 
 result.content_type  # ContentType.HTML or ContentType.TEXT
 result.body  # whichever decoded str was extracted
@@ -70,7 +79,7 @@ Lenient mode is the default. It substitutes where possible and returns a tuple
 of diagnostics:
 
 ```python
-result = gr.deencapsulate(raw_rtf)
+result = ottertf.deencapsulate(raw_rtf)
 for diagnostic in result.diagnostics:
     print(diagnostic.code, diagnostic.message)
 ```
@@ -81,10 +90,10 @@ page:
 
 ```python
 try:
-    result = gr.deencapsulate(raw_rtf, strict=True)
-except gr.NotEncapsulatedRtfError:
+    result = ottertf.deencapsulate(raw_rtf, strict=True)
+except ottertf.NotEncapsulatedRtfError:
     ...  # neither encapsulation marker was recognized
-except gr.GoldenRetrieverError as error:
+except ottertf.OtteRTFError as error:
     ...  # strict structural failure
 ```
 
@@ -97,7 +106,7 @@ unchanged, so a caller that writes a different character encoding must update th
 declaration:
 
 ```python
-html = gr.normalize_charset_declaration(result.body, "utf-8")
+html = ottertf.normalize_charset_declaration(result.body, "utf-8")
 payload = html.encode("utf-8")
 ```
 

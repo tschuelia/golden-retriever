@@ -7,7 +7,7 @@ been through it.
 
 import pytest
 
-from golden_retriever.html_meta import declared_charset, normalize_charset_declaration
+from ottertf.html_meta import declared_charset, normalize_charset_declaration
 
 SHORT = '<meta charset="windows-1252">'
 """The short spelling of a declaration."""

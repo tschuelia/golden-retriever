@@ -73,7 +73,7 @@ PidTagRtfCompressed bytes
         v
 uncompressed RTF bytes
         |
-        | golden_retriever.deencapsulate(...)
+        | ottertf.deencapsulate(...)
         v
 Python str containing HTML or plain text
         |
@@ -90,7 +90,7 @@ and dictionary rules, and de-encapsulation has RTF state and encoding rules.
 
 The extracted HTML can retain references such as `cid:image001.png@...`.
 MS-OXRTFEX §2.2.3.4 describes integrating attachments, but that requires the
-containing message and attachment properties. golden-retriever never sees those
+containing message and attachment properties. otteRTF 🦦 never sees those
 objects, so it leaves references untouched. A caller can match Content-ID values
 using properties such as
 [PidTagAttachContentId](https://learn.microsoft.com/en-us/openspecs/exchange_server_protocols/ms-oxprops/9643fc31-3d26-45c0-b639-b08969fcd267).

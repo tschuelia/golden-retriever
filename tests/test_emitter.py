@@ -12,8 +12,8 @@ from collections.abc import Mapping
 
 import pytest
 
-from golden_retriever.emitter import REPLACEMENT_CHARACTER, Emitted, Emitter
-from golden_retriever.result import DiagnosticCode
+from ottertf.emitter import REPLACEMENT_CHARACTER, Emitted, Emitter
+from ottertf.result import DiagnosticCode
 
 FFFD = REPLACEMENT_CHARACTER
 

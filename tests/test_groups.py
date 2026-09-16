@@ -9,7 +9,7 @@ failing.
 
 import pytest
 
-from golden_retriever.groups import (
+from ottertf.groups import (
     DEFAULT_UC_SKIP,
     NON_VISIBLE_DESTINATIONS,
     Destination,

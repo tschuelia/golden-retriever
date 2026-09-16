@@ -8,8 +8,8 @@ the document says.
 
 import pytest
 
-from golden_retriever.charmap import BODY_CHARMAP
-from golden_retriever.tokenizer import (
+from ottertf.charmap import BODY_CHARMAP
+from ottertf.tokenizer import (
     MAX_CONTROL_WORD_LETTERS,
     MAX_PARAMETER_DIGITS,
     Token,

@@ -1,10 +1,10 @@
-"""Public result types returned by :func:`golden_retriever.deencapsulate`."""
+"""Public result types returned by :func:`ottertf.deencapsulate`."""
 
 from collections.abc import Mapping
 from dataclasses import dataclass, field
 from enum import StrEnum
 
-from golden_retriever.exceptions import GoldenRetrieverError
+from ottertf.exceptions import OtteRTFError
 
 __all__ = [
     "ContentType",
@@ -19,10 +19,10 @@ class ContentType(StrEnum):
     """What a document turned out to contain.
 
     ``NATIVE_RTF`` is only ever returned by
-    :func:`golden_retriever.detect_content_type`; a
+    :func:`ottertf.detect_content_type`; a
     :class:`DeEncapsulationResult` never carries it, because de-encapsulating
     native RTF raises
-    :class:`golden_retriever.NotEncapsulatedRtfError` instead.
+    :class:`ottertf.NotEncapsulatedRtfError` instead.
     """
 
     HTML = "html"
@@ -106,7 +106,7 @@ class Diagnostic:
     """A problem encountered while de-encapsulating, which did not stop it.
 
     With ``strict=True`` the structural subset of these is raised as an exception
-    instead. See :class:`golden_retriever.MalformedRtfError`.
+    instead. See :class:`ottertf.MalformedRtfError`.
     """
 
     code: str
@@ -145,7 +145,7 @@ class DeEncapsulationResult:
     This is what the ``<meta>`` element says, not what the bytes actually were:
     an encapsulated document declaring ``windows-1252`` reports exactly that,
     even though :attr:`html` is already a decoded ``str``. Use
-    :func:`golden_retriever.normalize_charset_declaration` before writing the
+    :func:`ottertf.normalize_charset_declaration` before writing the
     output somewhere with a different encoding.
     """
 
@@ -168,7 +168,6 @@ class DeEncapsulationResult:
             return self.html
         if self.text is not None:
             return self.text
-        raise GoldenRetrieverError(
-            "result carries neither HTML nor plain text; this is a bug in "
-            "golden-retriever"
+        raise OtteRTFError(
+            "result carries neither HTML nor plain text; this is a bug in otteRTF 🦦"
         )

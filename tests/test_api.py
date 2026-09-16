@@ -11,7 +11,7 @@ import types
 
 import pytest
 
-import golden_retriever as gr
+import ottertf as gr
 
 EXCEPTIONS = [
     gr.MalformedRtfError,
@@ -23,10 +23,10 @@ EXCEPTIONS = [
 
 @pytest.mark.parametrize("exc", EXCEPTIONS)
 def test_exceptions_derive_from_the_package_root(exc: type[Exception]) -> None:
-    assert issubclass(exc, gr.GoldenRetrieverError)
+    assert issubclass(exc, gr.OtteRTFError)
 
 
-@pytest.mark.parametrize("exc", [gr.GoldenRetrieverError, *EXCEPTIONS])
+@pytest.mark.parametrize("exc", [gr.OtteRTFError, *EXCEPTIONS])
 @pytest.mark.parametrize(
     "builtin", [TypeError, ValueError, LookupError, ArithmeticError]
 )
@@ -35,14 +35,14 @@ def test_exceptions_do_not_alias_builtins(
 ) -> None:
     """A caller's ``except TypeError`` must not swallow our errors.
 
-    Inheriting from a builtin makes ``except GoldenRetrieverError`` neither necessary
+    Inheriting from a builtin makes ``except OtteRTFError`` neither necessary
     nor sufficient, which is exactly the trap this package exists to avoid.
     """
     assert not issubclass(exc, builtin)
 
 
 def test_root_exception_derives_from_exception() -> None:
-    assert issubclass(gr.GoldenRetrieverError, Exception)
+    assert issubclass(gr.OtteRTFError, Exception)
 
 
 def test_all_is_sorted_and_importable() -> None:
@@ -73,7 +73,7 @@ def test_version_is_a_string() -> None:
 
 def test_py_typed_is_packaged() -> None:
     """PEP 561 marker must ship, or downstream type checking silently degrades."""
-    marker = importlib.resources.files("golden_retriever").joinpath("py.typed")
+    marker = importlib.resources.files("ottertf").joinpath("py.typed")
     assert marker.is_file()
 
 
@@ -122,7 +122,7 @@ def test_body_raises_a_package_error_when_empty() -> None:
         document_encoding="cp1252",
         declared_html_charset=None,
     )
-    with pytest.raises(gr.GoldenRetrieverError):
+    with pytest.raises(gr.OtteRTFError):
         _ = empty.body
 
 

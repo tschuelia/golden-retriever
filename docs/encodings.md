@@ -60,7 +60,7 @@ default is one.
 RTF 1.9.1's “Unicode RTF” rules count a control word or control symbol as one
 fallback character, count a whole `\binN` construct as one, do not count the
 delimiter space after a control word, and stop fallback skipping at a group
-boundary. golden-retriever implements those token-level rules.
+boundary. otteRTF 🦦 implements those token-level rules.
 
 One project deviation is intentional: a second `\uN` cancels a pending fallback
 skip instead of being consumed as the fallback. This preserves adjacent Unicode
@@ -92,7 +92,7 @@ Before serializing to another encoding, update the declaration:
 
 ```python
 html = result.body
-html = golden_retriever.normalize_charset_declaration(html, "utf-8")
+html = ottertf.normalize_charset_declaration(html, "utf-8")
 output_bytes = html.encode("utf-8")
 ```
 

@@ -42,7 +42,7 @@ appear, it supersedes the code page corresponding to the \\fcharsetN", and, unde
 the codepage given by \\fcharsetN".
 
 An entry naming neither, or naming ``\\fcharset0`` or ``\\fcharset1``, decodes in the
-document's code page -- see :data:`~golden_retriever.codepages.ANSI_CHARSET`.
+document's code page -- see :data:`~ottertf.codepages.ANSI_CHARSET`.
 
 Leniency
 ========
@@ -65,14 +65,14 @@ from collections.abc import Iterable, Iterator, Mapping
 from dataclasses import dataclass
 from typing import NamedTuple
 
-from golden_retriever.codepages import (
+from ottertf.codepages import (
     FCHARSET_TO_CODEPAGE,
     SYMBOL_CHARSET,
     encoding_for_codepage,
 )
-from golden_retriever.groups import IGNORABLE_SYMBOL
-from golden_retriever.result import Diagnostic, DiagnosticCode, FontInfo
-from golden_retriever.tokenizer import Token, TokenKind
+from ottertf.groups import IGNORABLE_SYMBOL
+from ottertf.result import Diagnostic, DiagnosticCode, FontInfo
+from ottertf.tokenizer import Token, TokenKind
 
 __all__ = [
     "CHARSET_WORD",

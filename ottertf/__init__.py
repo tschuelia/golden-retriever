@@ -4,9 +4,9 @@ An implementation of MS-OXRTFEX de-encapsulation: given the uncompressed RTF
 bytes of an email body, recover the HTML or plain text that Exchange or Outlook
 encapsulated in it.
 
-    import golden_retriever as gr
+    import ottertf
 
-    result = gr.deencapsulate(raw_rtf)
+    result = ottertf.deencapsulate(raw_rtf)
     print(result.body)
 
 Pure standard library, no runtime dependencies. See the README for the
@@ -15,17 +15,17 @@ conformance table and the documented deviations from the specification.
 
 import importlib.metadata
 
-from golden_retriever.deencapsulator import deencapsulate
-from golden_retriever.detect import detect_content_type, is_encapsulated_html
-from golden_retriever.exceptions import (
-    GoldenRetrieverError,
+from ottertf.deencapsulator import deencapsulate
+from ottertf.detect import detect_content_type, is_encapsulated_html
+from ottertf.exceptions import (
     MalformedRtfError,
     MissingFontTableError,
     NotEncapsulatedRtfError,
+    OtteRTFError,
     UnsupportedCodePageError,
 )
-from golden_retriever.html_meta import declared_charset, normalize_charset_declaration
-from golden_retriever.result import (
+from ottertf.html_meta import declared_charset, normalize_charset_declaration
+from ottertf.result import (
     ContentType,
     DeEncapsulationResult,
     Diagnostic,
@@ -34,7 +34,7 @@ from golden_retriever.result import (
 )
 
 try:
-    __version__ = importlib.metadata.version("golden-retriever")
+    __version__ = importlib.metadata.version("ottertf")
 except importlib.metadata.PackageNotFoundError:  # pragma: no cover - normally installed
     __version__ = "0.0.0"
 
@@ -44,10 +44,10 @@ __all__ = [
     "Diagnostic",
     "DiagnosticCode",
     "FontInfo",
-    "GoldenRetrieverError",
     "MalformedRtfError",
     "MissingFontTableError",
     "NotEncapsulatedRtfError",
+    "OtteRTFError",
     "UnsupportedCodePageError",
     "__version__",
     "declared_charset",
